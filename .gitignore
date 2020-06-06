@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# Sublime
+*.sublime-*
+
 # Directories
 /bin/
 
