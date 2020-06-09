@@ -1,0 +1,1 @@
+odin run src/main.odin -out=bin/application.exe
