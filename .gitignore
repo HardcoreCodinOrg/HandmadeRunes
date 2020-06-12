@@ -42,3 +42,6 @@
 
 # JetBrains
 /.idea/
+
+# Backups
+/_bk/

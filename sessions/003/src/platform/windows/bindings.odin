@@ -1,12 +1,34 @@
 package windows
 
+foreign import kernel "system:kernel32.lib"
+
+@(default_calling_convention = "std")
+foreign kernel {
+	GetModuleHandleA :: proc(
+		lpModuleName: LPCSTR
+	) -> HMODULE ---;	
+
+    QueryPerformanceCounter :: proc(
+        lpPerformanceCount: ^LARGE_INTEGER
+    ) -> BOOL ---;
+
+    QueryPerformanceFrequency :: proc(
+        lpFrequency: ^LARGE_INTEGER
+    ) -> BOOL ---;
+}
+
 foreign import user "system:user32.lib"
 
 @(default_calling_convention = "std")
 foreign user {
-    RegisterClassA :: proc(
-        lpWndClass: ^WNDCLASSA
-    ) -> WORD ---;
+	LoadCursorA :: proc(
+		hInstance    : HINSTANCE,
+		lpCursorName : LPSTR
+	) -> HCURSOR ---;
+
+	RegisterClassA :: proc(
+		lpWndClass: ^WNDCLASSA
+	) -> ATOM ---;
 
     CreateWindowExA :: proc(
         dwExStyle    : DWORD,
@@ -23,15 +45,17 @@ foreign user {
         lpParam      : LPVOID
     ) -> HWND ---;
 
-    LoadCursorA :: proc(
-        hInstance    : HINSTANCE,
-        lpCursorName : LPSTR
-    ) -> HCURSOR ---;
-
     ShowWindow :: proc(
-        hWnd: HWND,
+        hWnd    : HWND,
         nCmdShow: INT
     ) -> BOOL ---;
+
+    DefWindowProcA :: proc(
+        hWnd   : HWND,
+        Msg    : UINT,
+        wParam : WPARAM,
+        lParam : LPARAM
+    ) -> LRESULT ---;
 
     PeekMessageA :: proc(
         lpMsg         : LPMSG,
@@ -40,8 +64,8 @@ foreign user {
         wMsgFilterMax : UINT,
         wRemoveMsg    : UINT
     ) -> BOOL ---;
-    
-    TranslateMessage :: proc(
+
+	TranslateMessage :: proc(
         lpMsg: ^MSG
     ) -> BOOL ---;
 
@@ -50,16 +74,11 @@ foreign user {
     ) -> LRESULT ---;
 
     PostQuitMessage :: proc(nExitCode: INT) ---;    
-    DefWindowProcA :: proc(
-        hWnd   : HWND,
-        Msg    : UINT,
-        wParam : WPARAM,
-        lParam : LPARAM
-    ) -> LRESULT ---;
 
     GetDC :: proc(
-        hWnd: HWND
+      hWnd: HWND
     ) -> HDC ---;
+
 
     GetClientRect :: proc(
         hWnd   : HWND,
@@ -67,53 +86,16 @@ foreign user {
     ) -> BOOL ---;
 
     ValidateRgn :: proc(
-        hWnd    : HWND,
-        hRgn    : HRGN
+        hWnd: HWND,
+        hRgn: HRGN
     ) -> BOOL ---;
 
     InvalidateRgn :: proc(
-        hWnd    : HWND,
-        hRgn    : HRGN,
-        bErase  : BOOL
-    ) -> BOOL ---;
-
-    SetCapture :: proc(hWnd: HWND) -> HWND ---;
-    ReleaseCapture :: proc() -> BOOL ---;
-    ShowCursor :: proc(bShow: BOOL) ---;
-
-    RegisterRawInputDevices :: proc(
-        pRawInputDevices : PCRAWINPUTDEVICE,
-        uiNumDevices     : UINT,
-        cbSize           : UINT
-    ) -> BOOL ---;
-
-    GetRawInputData :: proc(
-        hRawInput   : HRAWINPUT,
-        uiCommand   : UINT,
-        pData       : LPVOID,
-        pcbSize     : PUINT,
-        cbSizeHeader: UINT
-    ) -> UINT ---;
-}
-
-
-foreign import kernel "system:kernel32.lib"
-
-@(default_calling_convention = "std")
-foreign kernel {
-    GetModuleHandleA :: proc(
-        module_name: cstring
-    ) -> HMODULE ---;
-
-    QueryPerformanceFrequency :: proc(
-        lpFrequency: ^LARGE_INTEGER
-    ) -> BOOL ---;
-
-    QueryPerformanceCounter :: proc(
-        lpPerformanceCount: ^LARGE_INTEGER
+      hWnd  : HWND,
+      hRgn  : HRGN,
+      bErase: BOOL
     ) -> BOOL ---;
 }
-
 
 foreign import gdi "system:gdi32.lib"
 
@@ -134,3 +116,4 @@ foreign gdi {
         ColorUse  : UINT
     ) -> int ---;
 }
+
